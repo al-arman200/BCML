@@ -7,7 +7,7 @@ import datetime
 
 class WebScraping:
     def __init__(self, url):
-        self.driver = webdriver.Chrome()
+        self.driver = webdriver.Firefox()
         self.driver.maximize_window()
         self.driver.get(url)#'https://divar.ir/s/tehran-province/car'
     
@@ -30,11 +30,11 @@ class WebScraping:
                 return pngsrc
             else:
                 sleep(2)  
-                get_thumbnails(tag)
+                self.get_thumbnails(tag)
         except:
             return 'null'
 
-    def getLink(self):
+    def get_Link(self):
         linklist = list()
         for j in range(9999):
             soup = BeautifulSoup(self.driver.page_source)
@@ -45,15 +45,12 @@ class WebScraping:
                 piclink = self.get_thumbnails(i)
                 if not(name in  linklist):
                     linklist.append(name)
-                    
-                    linkdes = '"%s","%s","%s" \n'%(name, link, piclink)
-                    self.save(linkdes,'links.txt')
-
+                    linkdes = '"%s","https://divar.ir%s","%s" \n'%(name, link, piclink)
+                    self.save(linkdes,'links.csv')
                     print('https://divar.ir%s'%link)
-                    print(piclink)
             self.driver.execute_script("window.scrollTo(0,600*%s);"%j)
             sleep(1)
         print(linklist)
 
 scraping = WebScraping('https://divar.ir/s/tehran-province/car')
-scraping.getLink()
+scraping.get_Link()
